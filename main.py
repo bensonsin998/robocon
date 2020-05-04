@@ -6,7 +6,7 @@ cam = cv2.VideoCapture(0)
 while True:
     ret, img = cam.read()
     vis = img.copy()
-    cv2.imshow("Cmaera", vis)
+    cv2.imshow("Camera", vis)
     if cv2.waitKey(5) == 27:
       break;
 
