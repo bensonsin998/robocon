@@ -2,13 +2,12 @@ import cv2
 import imutils
 import numpy as np
 
-process = True
-quitbutton = 27     #Esc
-
 cam = cv2.VideoCapture(0)
 if not cam.isOpened():
     print("No camera connected")
     exit(0)
+process = True
+quitbutton = 27     #Esc
 
 while process:
     ret, frame = cam.read()
