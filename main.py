@@ -11,11 +11,12 @@ if not cam.isOpened():
     exit(0)
 
 while process:
-    ret, screen = cam.read()
-    screen = imutils.resize(screen, width = 800, height = 600)
+    ret, frame = cam.read()
+
+    frame = imutils.resize(frame, width = 800, height = 600)
 
 
-    cv2.imshow("Camera", screen)
+    cv2.imshow("Camera", frame)
 
     if(0xFF & cv2.waitKey(1) == quitbutton):
         print("Esc is pressed")
