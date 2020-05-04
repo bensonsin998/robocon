@@ -1,4 +1,5 @@
 import cv2
+import imutils
 import numpy as np
 
 process = True
@@ -11,8 +12,10 @@ if not cam.isOpened():
 
 while process:
     ret, screen = cam.read()
-    display = screen.copy()
-    cv2.imshow("Camera", display)
+    screen = imutils.resize(screen, width = 800, height = 600)
+
+
+    cv2.imshow("Camera", screen)
 
     if(0xFF & cv2.waitKey(1) == quitbutton):
         print("Esc is pressed")
