@@ -65,6 +65,7 @@ while True:
       print("Center: ", center)
       print("X, Y", (x, y))
 
+  #TODO: Find the distance and position from the camera to the target
   if x < cam_Width_Middle - 100:
     direction = "Right"
   elif x >= cam_Width_Middle - 100 and x <= cam_Width_Middle + 100:
