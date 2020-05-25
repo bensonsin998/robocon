@@ -15,8 +15,11 @@ if not cam.isOpened():      #Error handler -> When cannot open the camera
 else:
     window_width = cam.get(cv.CAP_PROP_FRAME_WIDTH)
     window_Height = cam.get(cv.CAP_PROP_FRAME_HEIGHT)
-    window_width_Middle = window_width / 2
-    window_margin = 100
+    window_area_width = window_width / 3
+    window_left = window_area_width
+    window_right = window_width - window_area_width
+    window_mid_left = window_left + window_area_width / 3
+    window_mid_right = window_right - window_area_width / 3
 escButton = 27 #ESC
 #Target Object (rugby ball)
 center = None
@@ -59,24 +62,23 @@ while True:
       cv.circle(frame, center, 5, (0, 0, 255) , -1)   #Draw the center of the rball
       points.append(center)                 #Update the list of points containing the center (x, y) of the object
 
-      if x < window_width_Middle - window_margin:
-        position = "Left"
+    #Find object position
+    if x < window_left:
+      position = "Left"
 
-      elif x >= window_width_Middle - window_margin and x <= window_width_Middle + window_margin:
-        if x < window_width_Middle:
-          position = "Middle - Left"
+    elif x >= window_left and x < window_right:
+      pass
+      if x < window_mid_left:
+        position = "Middle - Left"
 
-        elif x == window_width_Middle:
-          position = "Middle"
-
-        else:
-          position = "Middle - Right"
+      elif x >= window_mid_left and x < window_mid_right:
+        position = "Middle"
 
       else:
-        position = "Right"
+        position = "Middle - Right"
 
     else:
-      position = ""
+      position = "Right"
 
   #Show the position and the moving direction(dx, dy) from the camera to the target on the screen
   cv.putText(frame, "Position: {}".format(position), (10, 30), cv.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 3)
