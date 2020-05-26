@@ -8,7 +8,7 @@ import numpy as np
 
 #Global Variable
 #Camera and Window Variables:
-cam = cv.cv2.VideoCapture(0, cv.CAP_DSHOW)   #Open the default camera
+cam = cv.cv2.VideoCapture(0)   #Open the default camera
 if not cam.isOpened():      #Error handler -> When cannot open the camera
     print("Error: Cannot open camera!!!")
     exit();
@@ -24,29 +24,26 @@ else:
     window_right = window_width - window_area_width
 
 escButton = 27 #ESC
-
 focal_length = 50.0
-
-lower_blue = (80, 80, 0)
-upper_blue = (140, 255, 255)
-
-lower_green = (29, 80, 6)
-upper_green = (64, 255, 255)
-
-min_size = 10
 
 #Target Object (rugby ball)
 center = None
 contours = None
 distance = -1.0
 dx, dy = None, None
+min_size = 10
+mixed_contour = None
 object_width = 2400.0
 points = []
 position = None
 radius = None
 x, y = 0 , 0
 
-mixed_contour = None
+#Color (HSV)
+object_lower_blue = (80, 80, 0)
+object_upper_blue = (140, 255, 255)
+object_lower_green = (29, 80, 6)
+object_upper_green = (64, 255, 255)
 
 while True:
   #Get frames from cam
@@ -56,8 +53,8 @@ while True:
   frame_hsv = cv.cvtColor(frame_blurred, cv.COLOR_BGR2HSV)  #Convert the color space to HSV
 
   #Construct a mask for the object color
-  blue_mask = cv.inRange(frame_hsv, lower_blue, upper_blue)
-  green_mask = cv.inRange(frame_hsv, lower_green, upper_green)
+  blue_mask = cv.inRange(frame_hsv, object_lower_blue, object_upper_blue)
+  green_mask = cv.inRange(frame_hsv, object_lower_green, object_upper_green)
 
   #Combine masks together
   mask = cv.bitwise_or(blue_mask, green_mask)
@@ -82,30 +79,31 @@ while True:
     mom = cv.moments(mixed_contour)
     center = (int(mom["m10"] / mom["m00"]), int(mom["m01"] / mom["m00"]))
 
-    cv.circle(frame, (int(x), int(y)), int(radius), (0, 255, 255), 2) #Draw the minimum enclosing circle around the rball
-    cv.circle(frame, center, 5, (0, 0, 255) , -1)   #Draw the center of the rball
-    points.append(center)                 #Update the list of points containing the center (x, y) of the object
+    if radius > min_size:
+      cv.circle(frame, (int(x), int(y)), int(radius), (0, 255, 255), 2) #Draw the minimum enclosing circle around the rball
+      cv.circle(frame, center, 5, (0, 0, 255) , -1)   #Draw the center of the rball
+      points.append(center)                 #Update the list of points containing the center (x, y) of the object
 
-    #Find object position
-    if x < window_left:
-      position = "Left"
+      #Find object position
+      if x < window_left:
+        position = "Left"
 
-    elif x >= window_left and x < window_right:
-      pass
-      if x < window_mid_left:
-        position = "Middle - Left"
+      elif x >= window_left and x < window_right:
+        pass
+        if x < window_mid_left:
+          position = "Middle - Left"
 
-      elif x >= window_mid_left and x < window_mid_right:
-        position = "Middle"
+        elif x >= window_mid_left and x < window_mid_right:
+          position = "Middle"
+
+        else:
+          position = "Middle - Right"
 
       else:
-        position = "Middle - Right"
+        position = "Right"
 
-    else:
-      position = "Right"
-
-    distance = (object_width * focal_length / (radius * 2)) / 10
-    distance = round(distance, 3)
+      distance = (object_width * focal_length / (radius * 2)) / 10
+      distance = round(distance, 3)
 
   else:
     position = ""
@@ -113,7 +111,7 @@ while True:
 
   #Show the position and the moving direction(dx, dy) from the camera to the target on the screen
   cv.putText(frame, "Position: {}".format(position), (10, 30), cv.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
-  cv.putText(frame, "dx: {}, dy: {}".format(dx, dy), (10, int(window_height) - 30), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
+  cv.putText(frame, "dx: {}, dy: {}".format(dx, dy), (10, int(window_height) - 30), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)   #Testing
   cv.putText(frame, "Distance: {}cm".format(distance), (int(window_width) - 200, int(window_height) - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
 
   #Show frame
