@@ -8,7 +8,7 @@ import numpy as np
 
 #Global Variable
 #Camera and Window Variables:
-cam = cv.cv2.VideoCapture(0)   #Open the default camera
+cam = cv.cv2.VideoCapture(0)   #Open the default camera   change 0 to -1 for raspberrypi
 if not cam.isOpened():      #Error handler -> When cannot open the camera
     print("Error: Cannot open camera!!!")
     exit();
@@ -23,8 +23,8 @@ else:
     window_mid_right = window_width - window_area_width * 4 / 3
     window_right = window_width - window_area_width
 
-escButton = 27 #ESC
-focal_length = 50.0
+escButton = 27      #ESC
+focal_length = 50.0 #Camera value
 
 #Target Object (rugby ball)
 center = None
@@ -47,9 +47,9 @@ object_upper_green = (64, 255, 255)
 
 #Velocity
 velocity = None
-v_x = 0
-v_y = 0
-v_z = 0
+v_x = 0     #1 = Right  0 = Stop  -1 = Left
+v_y = 0     #1 = Front  0 = Stop  -1 = Back
+v_z = 0     #1 = Rotate to Right  0 = Stop  -1 = Rotate to Left
 
 while True:
   #Get frames from cam
@@ -83,7 +83,7 @@ while True:
     mom = cv.moments(mixed_contour)
     center = (int(mom["m10"] / mom["m00"]), int(mom["m01"] / mom["m00"]))
 
-    if radius > min_size:
+    if radius >= min_size:
       cv.circle(frame, (int(x), int(y)), int(radius), (0, 255, 255), 2) #Draw the minimum enclosing circle around the rball
       cv.circle(frame, center, 5, (0, 0, 255) , -1)   #Draw the center of the rball
       points.append(center)                 #Update the list of points containing the center (x, y) of the object
@@ -91,9 +91,11 @@ while True:
       #Find object position
       if x < window_left:
         position = "Left"
+        v_x = -1
+        v_y = 1
+        v_z = 0
 
       elif x >= window_left and x < window_right:
-        pass
         if x < window_mid_left:
           position = "Middle - Left"
 
@@ -103,15 +105,35 @@ while True:
         else:
           position = "Middle - Right"
 
+        v_x = 0
+        v_y = 1
+        v_z = 0
+
       else:
         position = "Right"
+        v_x = 1
+        v_y = 1
+        v_z = 0
 
       distance = (object_width * focal_length / (radius * 2)) / 10
       distance = round(distance, 3)
 
+      if distance <= 3.0:
+        if position == "Left" or position == "Middle - Left":
+          v_z = -1
+
+        elif position == "Right" or position == "Middle - Right":
+          v_z = 1
+
   else:
     position = ""
     distance = -1.0
+    v_x = 0
+    v_y = 0
+    v_z = 0
+
+  velocity = (v_x, v_y, v_z)
+  print(velocity)
 
   #Show the position and the moving direction(dx, dy) from the camera to the target on the screen
   cv.putText(frame, "Position: {}".format(position), (10, 30), cv.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
