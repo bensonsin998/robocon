@@ -33,6 +33,8 @@ upper_blue = (140, 255, 255)
 lower_green = (29, 80, 6)
 upper_green = (64, 255, 255)
 
+min_size = 10
+
 #Target Object (rugby ball)
 center = None
 contours = None
@@ -54,15 +56,15 @@ while True:
   frame_hsv = cv.cvtColor(frame_blurred, cv.COLOR_BGR2HSV)  #Convert the color space to HSV
 
   #Construct a mask for the object color
-
   blue_mask = cv.inRange(frame_hsv, lower_blue, upper_blue)
   green_mask = cv.inRange(frame_hsv, lower_green, upper_green)
 
+  #Combine masks together
   mask = cv.bitwise_or(blue_mask, green_mask)
   frame_mask = cv.bitwise_and(frame, frame, mask = mask)
 
+  #Change the color of frame_mask to gray and perfrom erode and dilate to it
   frame_mask = cv.cvtColor(frame_mask, cv.COLOR_BGR2GRAY)
-
   frame_mask = cv.erode(frame_mask, None, iterations = 2)
   frame_mask = cv.dilate(frame_mask, None, iterations = 2)
 
@@ -110,7 +112,7 @@ while True:
     distance = -1.0
 
   #Show the position and the moving direction(dx, dy) from the camera to the target on the screen
-  cv.putText(frame, "Position: {}".format(position), (10, 30), cv.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 3)
+  cv.putText(frame, "Position: {}".format(position), (10, 30), cv.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
   cv.putText(frame, "dx: {}, dy: {}".format(dx, dy), (10, int(window_height) - 30), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
   cv.putText(frame, "Distance: {}cm".format(distance), (int(window_width) - 200, int(window_height) - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
 
