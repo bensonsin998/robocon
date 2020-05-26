@@ -45,6 +45,12 @@ object_upper_blue = (140, 255, 255)
 object_lower_green = (29, 80, 6)
 object_upper_green = (64, 255, 255)
 
+#Velocity
+velocity = None
+v_x = 0
+v_y = 0
+v_z = 0
+
 while True:
   #Get frames from cam
   retval, frame = cam.read()
@@ -69,8 +75,6 @@ while True:
   contours = cv.findContours(frame_mask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
   contours = imutils.grab_contours(contours)
 
-  #Testing
-  #TODO: Make multi contours as one
   if len(contours) > 0:
     for contour in contours:
       mixed_contour = cv.convexHull(contour)
