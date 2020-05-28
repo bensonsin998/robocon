@@ -1,7 +1,8 @@
 #Main Purpose:  1. Start the camera
 #               2. Read the frame from the camera
 #               3. Locate the object: rugby ball
-#               4. Keep Calculating the position between the camera and the object
+#               4. Calculate distance from camera to object
+#               5. Return the velocity
 import cv2 as cv
 import imutils
 import numpy as np
@@ -19,9 +20,10 @@ else:
     window_area_width = window_width / 3
 
     window_left = window_area_width
-    window_mid_left = window_left + window_area_width / 3
-    window_mid_right = window_width - window_area_width * 4 / 3
     window_right = window_width - window_area_width
+
+    window_mid_left = window_left + window_area_width / 3
+    window_mid_right = window_right - window_area_width / 3
 
 escButton = 27      #ESC
 focal_length = 50.0 #Camera value
@@ -69,8 +71,8 @@ while True:
 
   #Change the color of frame_mask to gray and perfrom erode and dilate to it
   frame_mask = cv.cvtColor(frame_mask, cv.COLOR_BGR2GRAY)
-  frame_mask = cv.erode(frame_mask, None, iterations = 2)
-  frame_mask = cv.dilate(frame_mask, None, iterations = 2)
+  frame_mask = cv.erode(frame_mask, None, iterations = 3)
+  frame_mask = cv.dilate(frame_mask, None, iterations = 3)
 
   #Find contours in the mask
   contours = cv.findContours(frame_mask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
@@ -131,6 +133,8 @@ while True:
 
     #Rotate the robot if the distance is less then 3cm
     if distance <= 3.0:
+      v_y = 0
+
       if position == "Left" or position == "Middle - Left":
         v_z = -1
 
@@ -151,9 +155,9 @@ while True:
     velocity = (0, 0, 0)
     print(velocity)     #Testing
 
-  #Show the position and the moving direction(dx, dy) from the camera to the target on the screen
+  #Show the position and the distance from the camera to the target on the screen
   cv.putText(frame, "Position: {}".format(position), (10, 30), cv.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
-  cv.putText(frame, "Distance: {}cm".format(distance), (int(window_width) - 200, int(window_height) - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
+  cv.putText(frame, "Distance: {} cm".format(distance), (int(window_width) - 200, int(window_height) - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
 
   #Show frame
   cv.imshow("Camera", frame)          #Display the result to the screen
