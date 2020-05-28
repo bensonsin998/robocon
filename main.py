@@ -8,7 +8,7 @@ import numpy as np
 
 #Global Variable
 #Camera and Window Variables:
-cam = cv.cv2.VideoCapture(0)   #Open the default camera   change 0 to -1 for raspberrypi
+cam = cv.VideoCapture(0)   #Open the default camera   change 0 to -1 for raspberrypi
 if not cam.isOpened():      #Error handler -> When cannot open the camera
     print("Error: Cannot open camera!!!")
     exit();
@@ -31,6 +31,7 @@ center = None
 contours = None
 distance = -1.0
 dx, dy = None, None
+found = False
 min_size = 10
 mixed_contour = None
 object_width = 2400.0
@@ -89,13 +90,13 @@ while True:
       points.append(center)                 #Update the list of points containing the center (x, y) of the object
 
       #Find object position
-      if x < window_left:
+      if x < window_left:   #Object is located in left region
         position = "Left"
         v_x = -1
         v_y = 1
         v_z = 0
 
-      elif x >= window_left and x < window_right:
+      elif x >= window_left and x < window_right: #Object is located in middle region
         if x < window_mid_left:
           position = "Middle - Left"
 
@@ -109,7 +110,7 @@ while True:
         v_y = 1
         v_z = 0
 
-      else:
+      else:               #Object is located in right region
         position = "Right"
         v_x = 1
         v_y = 1
@@ -125,28 +126,27 @@ while True:
         elif position == "Right" or position == "Middle - Right":
           v_z = 1
 
-  else:
-    position = ""
-    distance = -1.0
-    v_x = 0
-    v_y = 0
-    v_z = 0
+    else:
+      position = ""
+      distance = -1.0
+      v_x = 0
+      v_y = 0
+      v_z = 0
 
   velocity = (v_x, v_y, v_z)
   print(velocity)
 
   #Show the position and the moving direction(dx, dy) from the camera to the target on the screen
   cv.putText(frame, "Position: {}".format(position), (10, 30), cv.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
-  cv.putText(frame, "dx: {}, dy: {}".format(dx, dy), (10, int(window_height) - 30), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)   #Testing
   cv.putText(frame, "Distance: {}cm".format(distance), (int(window_width) - 200, int(window_height) - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
 
   #Show frame
   cv.imshow("Camera", frame)          #Display the result to the screen
 
   #Testing
-  cv.imshow("Frame_mask", frame_mask)
-  cv.imshow("Blue", blue_mask)
-  cv.imshow("Green", green_mask)
+  #cv.imshow("Frame_mask", frame_mask)
+  #cv.imshow("Blue", blue_mask)
+  #cv.imshow("Green", green_mask)
 
   #Wait "Esc" is press and break the loop
   if cv.waitKey(1) == escButton:
