@@ -43,10 +43,40 @@ radius = None
 x, y = 0 , 0
 
 #Color (HSV)
-object_lower_blue = (80, 80, 0)
-object_upper_blue = (140, 255, 255)
-object_lower_green = (29, 80, 6)
-object_upper_green = (64, 255, 255)
+low_blue_H, low_blue_S, low_blue_V = 80, 80, 0
+upper_blue_H, upper_blue_S, upper_blue_V = 140, 255, 255
+low_yellow_H, low_yellow_S, low_yellow_V = 29, 80, 6
+upper_yellow_H, upper_yellow_S, upper_yellow_V = 64, 255, 255
+
+
+#Create HSV track bar
+def nothing(x):
+  pass
+
+trackbar_name_blue = "Blue HSV track bar"
+trackbar_name_yellow = "Yellow HSV track bar"
+
+cv.namedWindow(trackbar_name_blue)
+cv.namedWindow(trackbar_name_yellow)
+
+#cv.resizeWindow(trackbar_name_blue, 500, 400)
+#cv.resizeWindow(trackbar_name_yellow, 500, 400)
+
+cv.createTrackbar("L H: ", trackbar_name_blue, low_blue_H, 255, nothing)
+cv.createTrackbar("L S: ", trackbar_name_blue, low_blue_S, 255, nothing)
+cv.createTrackbar("L V: ", trackbar_name_blue, low_blue_V, 255, nothing)
+
+cv.createTrackbar("U H: ", trackbar_name_blue, upper_blue_H, 255, nothing)
+cv.createTrackbar("U S: ", trackbar_name_blue, upper_blue_S, 255, nothing)
+cv.createTrackbar("U V: ", trackbar_name_blue, upper_blue_V, 255, nothing)
+
+cv.createTrackbar("L H: ", trackbar_name_yellow, low_yellow_H, 255, nothing)
+cv.createTrackbar("L S: ", trackbar_name_yellow, low_yellow_S, 255, nothing)
+cv.createTrackbar("L V: ", trackbar_name_yellow, low_yellow_V, 255, nothing)
+
+cv.createTrackbar("U H: ", trackbar_name_yellow, upper_yellow_H, 255, nothing)
+cv.createTrackbar("U S: ", trackbar_name_yellow, upper_yellow_S, 255, nothing)
+cv.createTrackbar("U V: ", trackbar_name_yellow, upper_yellow_V, 255, nothing)
 
 #Velocity
 velocity = None
@@ -61,12 +91,28 @@ while True:
   frame_blurred = cv.GaussianBlur(frame, (11, 11), 0)       #Blur the frame
   frame_hsv = cv.cvtColor(frame_blurred, cv.COLOR_BGR2HSV)  #Convert the color space to HSV
 
+  object_lower_blue = (cv.getTrackbarPos("L H: ", trackbar_name_blue),
+                        cv.getTrackbarPos("L S: ", trackbar_name_blue),
+                        cv.getTrackbarPos("L V: ", trackbar_name_blue))
+
+  object_upper_blue = (cv.getTrackbarPos("U H: ", trackbar_name_blue),
+                        cv.getTrackbarPos("U S: ", trackbar_name_blue),
+                        cv.getTrackbarPos("U V: ", trackbar_name_blue))
+
+  object_lower_yellow = (cv.getTrackbarPos("L H: ", trackbar_name_yellow),
+                          cv.getTrackbarPos("L S: ", trackbar_name_yellow),
+                          cv.getTrackbarPos("L V: ", trackbar_name_yellow))
+
+  object_upper_yellow = (cv.getTrackbarPos("U H: ", trackbar_name_yellow),
+                          cv.getTrackbarPos("U S: ", trackbar_name_yellow),
+                          cv.getTrackbarPos("U V: ", trackbar_name_yellow))
+
   #Construct a mask for the object color
   blue_mask = cv.inRange(frame_hsv, object_lower_blue, object_upper_blue)
-  green_mask = cv.inRange(frame_hsv, object_lower_green, object_upper_green)
+  yellow_mask = cv.inRange(frame_hsv, object_lower_yellow, object_upper_yellow)
 
   #Combine masks together
-  mask = cv.bitwise_or(blue_mask, green_mask)
+  mask = cv.bitwise_or(blue_mask, yellow_mask)
   frame_mask = cv.bitwise_and(frame, frame, mask = mask)
 
   #Change the color of frame_mask to gray and perfrom erode and dilate to it
