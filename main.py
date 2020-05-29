@@ -9,24 +9,37 @@ import numpy as np
 
 #Global Variable
 #Camera and Window Variables:
-cam = cv.VideoCapture(0)   #Open the default camera   change 0 to -1 for raspberrypi
-if not cam.isOpened():      #Error handler -> When cannot open the camera
-    print("Error: Cannot open camera!!!")
-    exit();
+cam_open = False
+cam = cv.VideoCapture(0)   #Open the default camera
+
+if cam.isOpened():
+  cam_open = True
+
 else:
-    window_width = cam.get(cv.CAP_PROP_FRAME_WIDTH)
-    window_height = cam.get(cv.CAP_PROP_FRAME_HEIGHT)
+  cam = cv.VideoCapture(-1)   #For raspberry pi -> -1 index means it find camera by itself
 
-    window_area_width = window_width / 3
+  if cam.isOpened():
+    cam_open = True
 
-    window_left = window_area_width
-    window_right = window_width - window_area_width
+if cam_open:
+  window_width = cam.get(cv.CAP_PROP_FRAME_WIDTH)
+  window_height = cam.get(cv.CAP_PROP_FRAME_HEIGHT)
 
-    window_mid_left = window_left + window_area_width / 3
-    window_mid_right = window_right - window_area_width / 3
+  window_area_width = window_width / 3
 
-escButton = 27      #ESC
-focal_length = 50.0 #Camera value
+  window_left = window_area_width
+  window_right = window_width - window_area_width
+
+  window_mid_left = window_left + window_area_width / 3
+  window_mid_right = window_right - window_area_width / 3
+
+else:
+  print("Error: Cannot open camera!!!")
+  exit()
+
+escButton = 27        #ESC
+focal_length = 363    #Camera value <-  Lenovo: 363
+                      #                 Logitech 720p camera: 534
 
 #Target Object (rugby ball)
 center = None
@@ -36,8 +49,7 @@ dx, dy = None, None
 found = False
 min_size = 10
 mixed_contour = None
-object_width = 2400.0
-points = []
+object_width = 11.811   #11.8110236inches <-> 30 cm
 position = None
 radius = None
 x, y = 0 , 0
@@ -56,11 +68,8 @@ def nothing(x):
 trackbar_name_blue = "Blue HSV track bar"
 trackbar_name_yellow = "Yellow HSV track bar"
 
-cv.namedWindow(trackbar_name_blue)
-cv.namedWindow(trackbar_name_yellow)
-
-#cv.resizeWindow(trackbar_name_blue, 500, 400)
-#cv.resizeWindow(trackbar_name_yellow, 500, 400)
+cv.namedWindow(trackbar_name_blue, cv.WINDOW_AUTOSIZE)
+cv.namedWindow(trackbar_name_yellow, cv.WINDOW_AUTOSIZE)
 
 cv.createTrackbar("L H: ", trackbar_name_blue, low_blue_H, 255, nothing)
 cv.createTrackbar("L S: ", trackbar_name_blue, low_blue_S, 255, nothing)
@@ -174,7 +183,8 @@ while True:
       v_z = 0
 
     #Find object distance to camera
-    distance = (object_width * focal_length / (radius * 2)) / 10
+    #print(radius * 2)      #<- Calculate focal length
+    distance = ((object_width * focal_length) / (radius * 2)) * 2.54
     distance = round(distance, 3)
 
     #Rotate the robot if the distance is less then 3cm
@@ -211,7 +221,7 @@ while True:
   #Testing
   #cv.imshow("Frame_mask", frame_mask)
   #cv.imshow("Blue", blue_mask)
-  #cv.imshow("Green", green_mask)
+  #cv.imshow("Yellow", yellow_mask)
 
   #Wait "Esc" is press and break the loop
   if cv.waitKey(1) == escButton:
