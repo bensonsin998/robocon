@@ -7,7 +7,7 @@ import cv2 as cv
 import imutils
 import numpy as np
 
-#Global Variable
+#Variables
 #Camera and Window Variables:
 cam_open = False
 cam = cv.VideoCapture(0)   #Open the default camera
@@ -21,6 +21,7 @@ else:
   if cam.isOpened():
     cam_open = True
 
+#Initialize camera related variables
 if cam_open:
   window_width = cam.get(cv.CAP_PROP_FRAME_WIDTH)
   window_height = cam.get(cv.CAP_PROP_FRAME_HEIGHT)
@@ -33,13 +34,13 @@ if cam_open:
   window_mid_left = window_left + window_area_width / 3
   window_mid_right = window_right - window_area_width / 3
 
+#End program if camera is not opened
 else:
   print("Error: Cannot open camera!!!")
   exit()
 
 escButton = 27        #ESC
-focal_length = 363    #Camera value <-  Lenovo: 363
-                      #                 Logitech 720p camera: 534
+focal_length = 621    #Logitech 720p camera
 
 #Target Object (rugby ball)
 center = None
@@ -55,15 +56,15 @@ radius = None
 x, y = 0 , 0
 
 #Color (HSV)
-low_blue_H, low_blue_S, low_blue_V = 80, 80, 0
+low_blue_H, low_blue_S, low_blue_V = 80, 80, 40
 upper_blue_H, upper_blue_S, upper_blue_V = 140, 255, 255
 low_yellow_H, low_yellow_S, low_yellow_V = 29, 80, 6
 upper_yellow_H, upper_yellow_S, upper_yellow_V = 64, 255, 255
 
 
 #Create HSV track bar
-def nothing(x):
-  pass
+def nothing(x):     #Function for track bar
+  pass              #Pass
 
 trackbar_name_blue = "Blue HSV track bar"
 trackbar_name_yellow = "Yellow HSV track bar"
@@ -139,7 +140,7 @@ while True:
 
     ((x, y), radius) = cv.minEnclosingCircle(mixed_contour)
     mom = cv.moments(mixed_contour)
-    #center = (int(mom["m10"] / mom["m00"]), int(mom["m01"] / mom["m00"]))
+    #center = (int(mom["m10"] / mom["m00"]), int(mom["m01"] / mom["m00"]))    #Testing: <- Calculate movement
 
     if radius >= min_size:
       found = True
@@ -183,7 +184,7 @@ while True:
       v_z = 0
 
     #Find object distance to camera
-    #print(radius * 2)      #<- Calculate focal length
+    #print(radius * 2)      #Testing: <- Calculate focal length
     distance = ((object_width * focal_length) / (radius * 2)) * 2.54
     distance = round(distance, 3)
 
@@ -219,7 +220,7 @@ while True:
   cv.imshow("Camera", frame)          #Display the result to the screen
 
   #Testing
-  #cv.imshow("Frame_mask", frame_mask)
+  cv.imshow("Frame_mask", frame_mask)
   #cv.imshow("Blue", blue_mask)
   #cv.imshow("Yellow", yellow_mask)
 
@@ -227,6 +228,7 @@ while True:
   if cv.waitKey(1) == escButton:
     break
 
-cam.release()
-cv.destroyAllWindows()
+#End of program
+cam.release()   #Release camera control
+cv.destroyAllWindows()    #Close all the windows create by the program / opencv
 print("End of Program")
