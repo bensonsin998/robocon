@@ -42,6 +42,7 @@ else:
   exit()
 
 escButton = 27        #ESC
+
 focal_length = 621    #Logitech 720p camera
 
 #Target Object (rugby ball)
@@ -233,6 +234,6 @@ while True:
     break
 
 #End of program
-cam.release()   #Release camera control
+cam.release()             #Release camera control
 cv.destroyAllWindows()    #Close all the windows create by the program / opencv
 print("End of Program")
