@@ -10,13 +10,15 @@ import numpy as np
 #Variables
 #Camera and Window Variables:
 cam_open = False
-cam = cv.VideoCapture(0)   #Open the default camera
+cam = cv.VideoCapture(1)   #Open the Web camera
 
 if cam.isOpened():
   cam_open = True
 
 else:
-  cam = cv.VideoCapture(-1)   #For raspberry pi -> -1 index means it find camera by itself
+  print("Message: Cannot open web cam!!!")
+  print("Message: Opening Default camera...")
+  cam = cv.VideoCapture(0)   #For raspberry pi: Change index to -1 (means raspberry pi finds camera itself)
 
   if cam.isOpened():
     cam_open = True
@@ -98,7 +100,9 @@ while True:
   #Get frames from cam
   retval, frame = cam.read()
 
-  frame_blurred = cv.GaussianBlur(frame, (11, 11), 0)       #Blur the frame
+  frame_blurred = cv.GaussianBlur(frame, (11, 11), 0) #Blur the frame
+  cv.imshow("Gaussian Blur", frame_blurred)           #Testing: <- Check Gaussian Blur image
+
   frame_hsv = cv.cvtColor(frame_blurred, cv.COLOR_BGR2HSV)  #Convert the color space to HSV
 
   object_lower_blue = (cv.getTrackbarPos("L H: ", trackbar_name_blue),
