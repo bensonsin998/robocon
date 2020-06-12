@@ -16,7 +16,7 @@ if cam.isOpened():
   cam_open = True
 
 else:
-  print("Message: Cannot open web cam!!!")
+  print("Message: Cannot open web camera!!!")
   print("Message: Opening Default camera...")
   cam = cv.VideoCapture(0)   #For raspberry pi: Change index to -1 (means raspberry pi finds camera itself)
 
@@ -102,7 +102,6 @@ while True:
   retval, frame = cam.read()
 
   frame_blurred = cv.GaussianBlur(frame, (11, 11), 0) #Blur the frame
-  cv.imshow("Gaussian Blur", frame_blurred)           #Testing: <- Check Gaussian Blur image
 
   frame_hsv = cv.cvtColor(frame_blurred, cv.COLOR_BGR2HSV)  #Convert the color space to HSV
 
@@ -225,7 +224,8 @@ while True:
   cv.imshow("Camera", frame)          #Display the result to the screen
 
   #Testing
-  cv.imshow("Frame_mask", frame_mask)
+  #cv.imshow("Gaussian Blur", frame_blurred)           #<- Check Gaussian Blur image
+  #cv.imshow("Frame_mask", frame_mask)
   #cv.imshow("Blue", blue_mask)
   #cv.imshow("Yellow", yellow_mask)
 
