@@ -20,6 +20,6 @@
 # After built from source
 1. Open new terminal
 2. Enter:
-   - > export PYTHONPATH=$PYTHONPATH:/usr/local/lib
+   > export PYTHONPATH=$PYTHONPATH:/usr/local/lib
 3. cd to the python file
 4. > python3 filename.py
