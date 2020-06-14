@@ -18,8 +18,6 @@
 > sudo make install
 
 # After built from source
-'''
-Open new terminal
-  -> Enter:
-    > export PYTHONPATH=$PYTHONPATH:/usr/local/lib
-'''
+1. Open new terminal
+2. Enter:
+  > export PYTHONPATH=$PYTHONPATH:/usr/local/lib
