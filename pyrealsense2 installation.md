@@ -1,4 +1,4 @@
-# ***pyrealsense2***
+# **pyrealsense2**
 ## ***Built from source***
 
 > sudo apt-get update && sudo apt-get upgrade
