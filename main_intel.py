@@ -15,14 +15,11 @@ color_fps = 30
 depth_fps = 30
 window_height = 480
 window_width = 640
-
-window_area_width = window_width / 3
-
-window_left = window_area_width
-window_right = window_width - window_area_width
-
-window_mid_left = window_left + window_area_width / 3
-window_mid_right = window_right - window_area_width / 3
+# Debug: Display information
+print("Information: Intel RealSense Camera")
+print("             window_height: ", window_height, "\t window_width: ", window_width)
+print("             color_fps: ", color_fps)
+print("             depth_fps: ", depth_fps)
 
 # Create an rs object which owns the handles to all connected intel Realsense devices
 pipe = rs.pipeline()
@@ -57,11 +54,19 @@ hor_aim_e = (int(window_width / 2 + 10), int(window_height / 2))
 hor_right1_aim_s = (int(window_width - window_width / 4 - 10), int(window_height / 2))
 hor_right1_aim_e = (int(window_width - window_width / 4 + 10), int(window_height / 2))
 
+ver_aim_s = (int(window_width / 2), int(window_height / 2 - 10))
+ver_aim_e = (int(window_width / 2), int(window_height / 2 + 10))
+
 hor_right2_aim_s = (int(window_width - window_width / 8 - 10), int(window_height / 2))
 hor_right2_aim_e = (int(window_width - window_width / 8 + 10), int(window_height / 2))
 
-ver_aim_s = (int(window_width / 2), int(window_height / 2 - 10))
-ver_aim_e = (int(window_width / 2), int(window_height / 2 + 10))
+# Debug: Display information
+print("Information: hor_left1_aim_s: ", hor_left1_aim_s, "\t hor_left1_aim_e: ", hor_left1_aim_e)
+print("             hor_left2_aim_s: ", hor_left2_aim_s, "\t hor_left2_aim_e: ", hor_left2_aim_e)
+print("             hor_aim_s: ", hor_aim_s, "\t hor_aim_e: ", hor_aim_e)
+print("             ver_aim_s: ", ver_aim_s, "\t ver_aim_e: ", ver_aim_e)
+print("             hor_right1_aim_s: ", hor_right1_aim_s, "\t hor_right1_aim_e: ", hor_right1_aim_e)
+print("             hor_right2_aim_s: ", hor_right2_aim_s, "\t hor_right2_aim_e: ", hor_right2_aim_e)
 
 # Color Space: HSV
 object_lower_blue = (low_blue_H, low_blue_S, low_blue_V) = (80, 80, 40)
@@ -70,6 +75,13 @@ object_upper_blue = (upper_blue_H, upper_blue_S, upper_blue_V) = (140, 255, 255)
 object_lower_yellow = (low_yellow_H, low_yellow_S, low_yellow_V) = (29, 80, 6)
 object_upper_yellow = (upper_yellow_H, upper_yellow_S, upper_yellow_V) = (64, 255, 255)
 
+# Debug: Display
+print("Information: object_lower_blue = (low_blue_H,low_blue_S, low_blue_V): ", object_lower_blue)
+print("             object_upper_blue = (upper_blue_H, upper_blue_S, upper_blue_V): ", object_upper_blue)
+print("             object_lower_yellow = (low_yellow_H, low_yellow_S, low_yellow_V): ", object_lower_yellow)
+print("             object_upper_yellow = (upper_yellow_H, upper_yellow_S, upper_yellow_V): ", object_upper_yellow)
+
+# """   # <- Delete the first # to comment the Track bar block
 # Debug: Color Space -> Track bar
 def nothing(x):
   pass
@@ -99,11 +111,17 @@ cv.createTrackbar("U H: ", trackbar_name_yellow, upper_yellow_H, 255, nothing)
 cv.createTrackbar("U S: ", trackbar_name_yellow, upper_yellow_S, 255, nothing)
 cv.createTrackbar("U V: ", trackbar_name_yellow, upper_yellow_V, 255, nothing)
 
+# """   # <- Delete the first # to comment the Track bar block
+
 # Distance
 distance = -1.0   # -1.0 <-> Target not found
+# Debug: Display information
+print("Information: Distance: ", distance)
 
 # Esc Button (ASCII code)
 escButton = 27
+# Debug: Display information
+print("Information: Esc: ", escButton)
 
 # Position
 # Position:
@@ -113,15 +131,38 @@ escButton = 27
 #           -> Middle - Right
 #           -> Right
 position = None
+# Debug: Display information
+print("Information: position: ", position)
+
 
 # Target: Kickball (Rugby ball)
 min_size = 10
+print("Information: min_size: ", min_size)
 
 # Velocity
 # v_x:  1 = Right  0 = Stop  -1 = Left
 # v_y:  1 = Front  0 = Stop  -1 = Back
 # v_z:  1 = Rotate to Right  0 = Stop  -1 = Rotate to Left
 velocity = (v_x, v_y, v_z) = (0, 0, 0)
+# Debug: Display information
+print("Information: velocity = (v_x, v_y, v_z): ", velocity)
+
+# Window size
+window_area_width = window_width / 3
+
+window_left = window_area_width
+window_right = window_width - window_area_width
+
+window_mid_left = window_left + window_area_width / 3
+window_mid_right = window_right - window_area_width / 3
+
+# Debug: Display information
+print("Information: window_area_width: ", window_area_width)
+print("             window_left: ", window_left)
+print("             window_right: ", window_right)
+print("             window_mid_left: ", window_mid_left)
+print("             window_mid_right: ", window_mid_right)
+
 
 print("Message: Environment variables: Initialing -> Success!!!")
 # -------------------------------------------------------------------------------------------------------------
