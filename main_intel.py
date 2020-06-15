@@ -197,6 +197,7 @@ try:
     # Convert color space from BGR -> HSV
     frame_hsv = cv.cvtColor(color_frame, cv.COLOR_BGR2HSV)
 
+    # """   # <- Delete the first # to comment the Track bar block
     # Debug: Get HSV color from trackbar
     object_lower_blue = (cv.getTrackbarPos("L H: ", trackbar_name_blue),
                         cv.getTrackbarPos("L S: ", trackbar_name_blue),
@@ -213,6 +214,8 @@ try:
     object_upper_yellow = (cv.getTrackbarPos("U H: ", trackbar_name_yellow),
                             cv.getTrackbarPos("U S: ", trackbar_name_yellow),
                             cv.getTrackbarPos("U V: ", trackbar_name_yellow))
+
+    # """   # <- Delete the first # to comment the Track bar block
 
     # Construct a mask for the object color
     blue_mask = cv.inRange(frame_hsv, object_lower_blue, object_upper_blue)
