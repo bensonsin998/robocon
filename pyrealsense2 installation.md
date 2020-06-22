@@ -5,6 +5,8 @@
 
 > sudo apt-get install python3 python3-dev
 
+> git clone https://github.com/IntelRealSense/librealsense.git
+
 > cd librealsense
 
 > mkdir build
