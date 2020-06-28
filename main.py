@@ -71,6 +71,8 @@ cv.createTrackbar("U V: ", trackbar_name_yellow, upper_yellow_V, 255, nothing)
 
 # Distance
 distance = -1.0   # -1.0 <-> Target not found
+# safe_distance = 30.0  # >= 30cm <- Always full power, i.e. v_y = 1
+target_distance = 20.0  # Target: 20cm <- The most suitable distance to kick the target
 
 # Esc Button (ASCII code)
 escButton = 27
@@ -88,17 +90,17 @@ position = None
 min_size = 10
 
 # Velocity
-# v_x:  1 = Right  0 = Stop  -1 = Left
-# v_y:  1 = Front  0 = Stop  -1 = Back
-# v_z:  1 = Rotate to Right  0 = Stop  -1 = Rotate to Left
-velocity = (v_x, v_y, v_z) = (0, 0, 0)
+# x:  1 = Right  0 = Stop  -1 = Left
+# y:  1 = Front  0 = Stop  -1 = Back
+# z:  1 = Rotate to Right  0 = Stop  -1 = Rotate to Left
+velocity = (0, 0, 0)
 
 # Window
-window_area_width = window_width / 3
+window_middle = window_width / 2
 
+window_area_width = window_width / 3
 window_left = window_area_width
 window_right = window_width - window_area_width
-
 window_mid_left = window_left + window_area_width / 3
 window_mid_right = window_right - window_area_width / 3
 
@@ -111,15 +113,17 @@ region_r1_e = (int(window_right), int(window_height))
 
 # -------------------------------------------------------------------------------------------------------------
 
-def find_position(x):
-  if x < window_left:
+def find_position(_x):
+  _position = ""
+
+  if _x < window_left:
     _position = "Left"
 
-  elif x >= window_left and x < window_right:
-    if x < window_mid_left:
+  elif _x >= window_left and _x < window_right:
+    if _x < window_mid_left:
       _position = "Middle - Left"
 
-    elif x >= window_mid_left and x < window_mid_right:
+    elif _x >= window_mid_left and _x < window_mid_right:
       _position = "Middle"
 
     else:
@@ -130,8 +134,35 @@ def find_position(x):
 
   return _position
 
-def find_velocity():
-  pass
+def find_velocity(_distance, _x):
+  _v_x = 0
+  _v_y = 0
+  _v_z = 0
+
+  # v_x
+  if _x < window_middle:
+    v_x = -1 if ((_x - window_middle) / 100) < -1 else (_x - window_middle) / 100
+
+  elif _x > window_middle:
+    v_x = 1 if ((_x - window_middle) / 100) > 1 else (_x - window_middle) / 100
+
+  else:
+    _v_x = 0
+
+  # v_y
+  if _distance > target_distance:
+    _v_y = 1 if ((_distance - target_distance) / 10) > 1 else (_distance - target_distance) / 10
+
+  elif _distance == target_distance:
+    _v_y = 0
+
+  else:
+    _v_y = -1 if ((_distance - target_distance) / 10) < -1 else (_distance - target_distance) / 10
+
+  # v_z
+  _v_z = 0
+
+  return (_v_x, _v_y, _v_z)
 
 # -------------------------------------------------------------------------------------------------------------
 
@@ -165,8 +196,8 @@ try:
     # """   # <- Delete the first # to comment the Track bar block
     # Debug: Get HSV color from trackbar
     object_lower_blue = (cv.getTrackbarPos("L H: ", trackbar_name_blue),
-                        cv.getTrackbarPos("L S: ", trackbar_name_blue),
-                        cv.getTrackbarPos("L V: ", trackbar_name_blue))
+                          cv.getTrackbarPos("L S: ", trackbar_name_blue),
+                          cv.getTrackbarPos("L V: ", trackbar_name_blue))
 
     object_upper_blue = (cv.getTrackbarPos("U H: ", trackbar_name_blue),
                           cv.getTrackbarPos("U S: ", trackbar_name_blue),
@@ -227,11 +258,20 @@ try:
       # distance = depth_frame.get_distance(int(window_width / 2), int(window_height / 2))   # <- Testing
       distance = round(depth_frame.get_distance(int(x), int(y)) * 100, 3)
 
+      # Position
+      position = find_position(x)
+
+      # Velocity
+      velocity = find_velocity(distance, x)
+
     # Reset variables if target is not found
     else:
       distance = -1.0
       position = "None"
       velocity = (0, 0, 0)
+
+    # ROS:
+    #      publish the velocity to the ROS core
 
     # Debug:
     #        Color_image -> Region
