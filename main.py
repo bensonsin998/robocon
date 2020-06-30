@@ -141,10 +141,10 @@ def find_velocity(_distance, _x):
 
   # v_x
   if _x < window_middle:
-    v_x = -1 if ((_x - window_middle) / 100) < -1 else (_x - window_middle) / 100
+    _v_x = -1 if ((_x - window_middle) / 100) < -1 else (_x - window_middle) / 100
 
   elif _x > window_middle:
-    v_x = 1 if ((_x - window_middle) / 100) > 1 else (_x - window_middle) / 100
+    _v_x = 1 if ((_x - window_middle) / 100) > 1 else (_x - window_middle) / 100
 
   else:
     _v_x = 0
