@@ -11,8 +11,8 @@ print("Message: Camera Algorithm: Start...")
 print("Message: Intel RealSense Camera: Initializing...")
 
 # Camera variables
-color_fps = 30
-depth_fps = 30
+color_fps = 15
+depth_fps = 6
 window_height = 480
 window_width = 640
 

@@ -7,8 +7,8 @@ import pyrealsense2 as rs
 print("Message: Camera Algorithm: Start...")
 
 # Camera variables
-color_fps = 30
-depth_fps = 30
+color_fps = 15
+depth_fps = 15
 window_height = 480
 window_width = 640
 
