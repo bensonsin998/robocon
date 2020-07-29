@@ -4,52 +4,52 @@
 
 * > sudo apt-get update && sudo apt-get upgrade
 
-> sudo apt-get install python python-dev
+* > sudo apt-get install python python-dev
 
-> git clone https://github.com/JetsonHacksNano/installSwapfile.git
+* > git clone https://github.com/JetsonHacksNano/installSwapfile.git
 
-> cd installSwapfile
+* > cd installSwapfile
 
-> ./installSwapfile.sh
+* > ./installSwapfile.sh
 
-> cd../
+* > cd../
 
-> git clone https://github.com/JetsonHacksNano/installlibrealsense.git
+* > git clone https://github.com/JetsonHacksNano/installlibrealsense.git
 
-> cd installLibrealsense
+* > cd installLibrealsense
 
-> ./installLibrealsense.sh
+* > ./installLibrealsense.sh
 
-> ./buildLibrealsense.sh
+* > ./buildLibrealsense.sh
 
-> cd ../
+* > cd ../
 
-> cd librealsense
+* > cd librealsense
 
-If there is not "build" folder,
->> mkdir build
+  > If there is not "build" folder,
+    >> mkdir build
 
-> cd build
+* > cd build
 
-> export PATH=/usr/local/cuda/bin:$PATH
+* > export PATH=/usr/local/cuda/bin:$PATH
 
-> cmake ../ -DBUILD_EXAMPLES=true -DBUILD_WITH_OPENMP=false -DHWM_OVER_XU=false -DFORCE_RSUSB_BACKEND=true -DBUILD_WITH_CUDA=true -DBUILD_PYTHON_BINDINGS=bool:true -DPYTHON_EXECUTABLE=/usr/bin/python
+* > cmake ../ -DBUILD_EXAMPLES=true -DBUILD_WITH_OPENMP=false -DHWM_OVER_XU=false -DFORCE_RSUSB_BACKEND=true -DBUILD_WITH_CUDA=true -DBUILD_PYTHON_BINDINGS=bool:true -DPYTHON_EXECUTABLE=/usr/bin/python
 
-> make -jx
+* > make -jx
 
-x = the core that Jetson support
-<br> Recommand: x >= 4
-<br> To check the core number, use command
-> nproc
+  > x = the core that Jetson support
+    <br> Recommand: x >= 4
+    <br> To check the core number, use command
+    >> nproc
 
-> sudo make install
+* > sudo make install
 
-> cd ../
+* > cd ../
 
-> sudo nano .bashrc
+* > sudo nano .bashrc
 
-Add the following command to the end of .bashrc
-> export PYTHONPATH=$PYTHONPATH:/usr/local/lib
+* Add the following command to the end of .bashrc
+  > export PYTHONPATH=$PYTHONPATH:/usr/local/lib
 
 
 ## ***After built from source***
