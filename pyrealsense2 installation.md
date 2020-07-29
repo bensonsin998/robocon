@@ -1,23 +1,56 @@
 # **pyrealsense2**
-## ***Built from source***
+## ***Build from source***
+### ****Python 2.x****
 
 > sudo apt-get update && sudo apt-get upgrade
 
-> sudo apt-get install python3 python3-dev
+> sudo apt-get install python python-dev
 
-> git clone https://github.com/IntelRealSense/librealsense.git
+> git clone https://github.com/JetsonHacksNano/installSwapfile.git
+
+> cd installSwapfile
+
+> ./installSwapfile.sh
+
+> cd../
+
+> git clone https://github.com/JetsonHacksNano/installlibrealsense.git
+
+> cd installLibrealsense
+
+> ./installLibrealsense.sh
+
+> ./buildLibrealsense.sh
+
+> cd ../
 
 > cd librealsense
 
+If there is not "build" folder,
 > mkdir build
 
 > cd build
 
-> cmake ../ -DBUILD_EXAMPLES=true -DBUILD_WITH_OPENMP=false -DHWM_OVER_XU=false -DBUILD_PYTHON_BINDINGS=bool:true -DPYTHON_EXECUTABLE=/usr/bin/python3 -DFORCE_RSUSB_BACKEND=true
+> export PATH=/usr/local/cuda/bin:$PATH
 
-> make -j4
+> cmake ../ -DBUILD_EXAMPLES=true -DBUILD_WITH_OPENMP=false -DHWM_OVER_XU=false -DFORCE_RSUSB_BACKEND=true -DBUILD_WITH_CUDA=true -DBUILD_PYTHON_BINDINGS=bool:true -DPYTHON_EXECUTABLE=/usr/bin/python
+
+> make -jx
+
+x = the core that Jetson support
+<br> To check the core number, use command
+> nproc
+<br> Recommand: x >= 4
 
 > sudo make install
+
+> cd ../
+
+> sudo nano .bashrc
+
+Add the following command to the end of .bashrc
+> export PYTHONPATH=$PYTHONPATH:/usr/local/lib
+
 
 ## ***After built from source***
 1.  Open new terminal
