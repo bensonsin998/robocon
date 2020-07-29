@@ -2,7 +2,7 @@
 ## ***Build from source***
 ### ****Python 2.x****
 
-> sudo apt-get update && sudo apt-get upgrade
+* > sudo apt-get update && sudo apt-get upgrade
 
 > sudo apt-get install python python-dev
 
