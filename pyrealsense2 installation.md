@@ -26,10 +26,9 @@
 
 * > cd librealsense
 
-  > If there is not "build" folder,
+* > If there is not "build" folder,
     >> mkdir build
-
-* > cd build
+  > cd build
 
 * > export PATH=/usr/local/cuda/bin:$PATH
 
