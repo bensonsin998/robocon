@@ -27,7 +27,7 @@
 > cd librealsense
 
 If there is not "build" folder,
-> mkdir build
+>> mkdir build
 
 > cd build
 
@@ -38,9 +38,9 @@ If there is not "build" folder,
 > make -jx
 
 x = the core that Jetson support
+<br> Recommand: x >= 4
 <br> To check the core number, use command
 > nproc
-<br> Recommand: x >= 4
 
 > sudo make install
 
