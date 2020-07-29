@@ -28,13 +28,14 @@
 
 * > If there is not "build" folder,
     >> mkdir build
+    
   > cd build
 
 * > export PATH=/usr/local/cuda/bin:$PATH
 
 * > cmake ../ -DBUILD_EXAMPLES=true -DBUILD_WITH_OPENMP=false -DHWM_OVER_XU=false -DFORCE_RSUSB_BACKEND=true -DBUILD_WITH_CUDA=true -DBUILD_PYTHON_BINDINGS=bool:true -DPYTHON_EXECUTABLE=/usr/bin/python
 
-* > make -jx
+* > make -j**x**
 
   > x = the core that Jetson support
     <br> Recommand: x >= 4
